@@ -2,7 +2,9 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	guuid "github.com/google/uuid"
@@ -45,6 +47,29 @@ func GetCities(config *config.Config, w http.ResponseWriter, r *http.Request) {
 		ResponseWriter(w, http.StatusOK, ccities)
 	} else {
 		ResponseWriter(w, http.StatusOK, cities)
+	}
+}
+
+func PostNewCity(config *config.Config, w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		country := r.URL.Query().Get("country")
+		name := r.URL.Query().Get("city")
+		temp, err := strconv.Atoi(r.URL.Query().Get("temp"))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		newCity := model.NewCity(guuid.New().String(), name, temp, country)
+
+		cities = append(cities, newCity)
+
+		filtered := filter(cities, func(v string) bool {
+			return strings.Contains(v, country)
+		})
+
+		ResponseWriter(w, http.StatusOK, filtered)
+	} else {
+		ResponseWriter(w, http.StatusBadRequest, "BAD REQUEST")
 	}
 }
 
