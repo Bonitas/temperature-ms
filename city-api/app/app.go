@@ -41,7 +41,7 @@ func (app *App) setRouters() {
 	var api = app.Router.PathPrefix("/api").Subrouter()
 
 	api.HandleFunc("/cities", app.handleRequest(handler.GetCities)).Methods(http.MethodGet)
-	api.HandleFunc("/add-city", app.handleRequest(handler.PostNewCity)).Methods(http.MethodPost)
+	api.HandleFunc("/cities", app.handleRequest(handler.AddNewCity)).Methods(http.MethodPost)
 }
 
 // Run will start the http server on host that you pass in. host:<ip:port>

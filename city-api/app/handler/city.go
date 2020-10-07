@@ -50,7 +50,7 @@ func GetCities(config *config.Config, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PostNewCity(config *config.Config, w http.ResponseWriter, r *http.Request) {
+func AddNewCity(config *config.Config, w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		country := r.URL.Query().Get("country")
 		name := r.URL.Query().Get("city")
@@ -67,7 +67,7 @@ func PostNewCity(config *config.Config, w http.ResponseWriter, r *http.Request) 
 			return strings.Contains(v, country)
 		})
 
-		ResponseWriter(w, http.StatusOK, filtered)
+		ResponseWriter(w, http.StatusCreated, filtered)
 	} else {
 		ResponseWriter(w, http.StatusBadRequest, "BAD REQUEST")
 	}
