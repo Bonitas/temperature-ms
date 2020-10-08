@@ -38,7 +38,9 @@ func filter(vs []*model.City, f func(string) bool) []*model.City {
 
 // GetcityMember get city members
 func GetCities(config *config.Config, w http.ResponseWriter, r *http.Request) {
-	initCityList()
+	if len(cities) == 0 {
+		initCityList()
+	}
 	query := r.URL.Query().Get("country")
 	if len(query) > 0 {
 		ccities := filter(cities, func(v string) bool {
@@ -63,11 +65,7 @@ func AddNewCity(config *config.Config, w http.ResponseWriter, r *http.Request) {
 
 		cities = append(cities, newCity)
 
-		filtered := filter(cities, func(v string) bool {
-			return strings.Contains(v, country)
-		})
-
-		ResponseWriter(w, http.StatusCreated, filtered)
+		ResponseWriter(w, http.StatusCreated, newCity)
 	} else {
 		ResponseWriter(w, http.StatusBadRequest, "BAD REQUEST")
 	}
